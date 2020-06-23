@@ -1,24 +1,24 @@
 // 787. Cheapest Flights Within K Stops
 
-#define pii pair<int,int>
-#define ti tuple<int,int,int>
+#define ti tuple<int,int,int> 
 class Solution {
 public:
-    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K){
+    int findCheapestPrice(int n, vector<vector<int>>& F, int src, int dst, int K){
         ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
-        vector<pii> adj[n];
-        for(auto x:flights)
+        vector<vector<pair<int,long>>> adj(n);
+        for(auto &x:F){
             adj[x[0]].push_back({x[1],x[2]});
+        }
         priority_queue<ti,vector<ti>,greater<ti>> pq;
-        pq.emplace(0,src,K+1);
+        pq.push({0,src,K+1});
         while(!pq.empty()){
-            auto [dist,u,stop]=pq.top();
+            auto [a,b,c]=pq.top();
             pq.pop();
-            if(u==dst)
-                return dist;
-            if(!stop) continue;
-            for(auto x:adj[u])
-                pq.emplace(x.second+dist,x.first,stop-1);
+            if(b==dst) return a;
+            if(!c) continue;
+            for(auto &x:adj[b]){
+                pq.push({x.second+a,x.first,c-1});
+            }
         }
         return -1;
     }
